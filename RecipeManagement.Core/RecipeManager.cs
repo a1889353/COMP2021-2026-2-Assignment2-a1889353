@@ -10,7 +10,11 @@ namespace RecipeManagement.Core;
 /// </summary>
 public sealed class RecipeManager : IRecipeManager
 {
-    // TODO Part A: add your private collection fields here.
+    private readonly Dictionary<int, Recipe> _recipes;
+    private readonly List<string> _shoppingList = new();
+    private readonly LinkedList<int> _cookingPlan = new();
+    private readonly Stack<int> _removedRecipes = new();
+    private readonly Queue<string> _instructions = new();
 
     public RecipeManager(IEnumerable<Recipe> recipes)
     {
