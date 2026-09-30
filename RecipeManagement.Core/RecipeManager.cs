@@ -16,11 +16,40 @@ public sealed class RecipeManager : IRecipeManager
     private readonly Stack<int> _removedRecipes = new();
     private readonly Queue<string> _instructions = new();
 
+    /// <summary>
+    /// Recipe Validation: checks that the recipe is not null, has a positive ID, and has a non-empty title.
+    /// </summary>
+    private static bool IsValidRecipe(Recipe? recipe) =>
+        recipe is not null
+        && recipe.Id > 0
+        && !string.IsNullOrWhiteSpace(recipe.Title);
+
+    /// <summary>
+    /// Initialises the recipe catalogue from the provided collection of recipes. 
+    /// Throws an ArgumentException if any recipe is deemed invalid or if there are duplicate recipe IDs.
+    /// </summary>
     public RecipeManager(IEnumerable<Recipe> recipes)
     {
-        // TODO Part A: validate recipes and build Dictionary<int, Recipe>.
-        _ = recipes;
+        ArgumentNullException.ThrowIfNull(recipes);
+        _recipes = new Dictionary<int, Recipe>();
+        foreach (Recipe recipe in recipes)
+        {
+            if (!IsValidRecipe(recipe))
+            {
+                throw new ArgumentException(
+                    "Each recipe must have a positive ID and a valid title.",
+                    nameof(recipes));
+            }
+
+            if (!_recipes.TryAdd(recipe.Id, recipe))
+            {
+                throw new ArgumentException(
+                    $"Recipe contains duplicate ID: {recipe.Id}, adjust accordingly.",
+                    nameof(recipes));
+            }
+        }
     }
+
 
     public int RecipeCount => 0;
     public int ShoppingItemCount => 0;
