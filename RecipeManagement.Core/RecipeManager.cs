@@ -148,11 +148,22 @@ public sealed class RecipeManager : IRecipeManager
         return true;
     }
 
-    public bool RestoreLastRemovedRecipe() =>
-        throw new NotImplementedException("Part A: implement RestoreLastRemovedRecipe.");
+    /// <summary>
+    /// pops the recently removed recipe ID and appends it at the end of the cooking plan
+    /// returns false if the stack is empty or if the recipe no longer exists
+    /// </summary>
+    public bool RestoreLastRemovedRecipe()
+    {
+        if (!_removedRecipes.TryPop(out int recipeId))
+        {
+            return false;
+        }
+
+        return AddRecipeToCookingPlan(recipeId);
+    }
 
     public int? PeekLastRemovedRecipe() =>
-        throw new NotImplementedException("Part A: implement PeekLastRemovedRecipe.");
+        _removedRecipes.TryPeek(out int recipeId) ? recipeId : null;
 
     /// <summary>
     /// returns a copy of the cooking plan without exposing the internal linked list
