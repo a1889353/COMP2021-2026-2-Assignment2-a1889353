@@ -17,7 +17,8 @@ public sealed class RecipeManager : IRecipeManager
     private readonly Queue<string> _instructions = new();
 
     /// <summary>
-    /// Recipe Validation: checks that the recipe is not null, has a positive ID, and has a non-empty title.
+    /// Recipe Validation
+    /// checks that the recipe is not null, has a positive ID, and has a non-empty title
     /// </summary>
     private static bool IsValidRecipe(Recipe? recipe) =>
         recipe is not null
@@ -25,8 +26,8 @@ public sealed class RecipeManager : IRecipeManager
         && !string.IsNullOrWhiteSpace(recipe.Title);
 
     /// <summary>
-    /// Initialises the recipe catalogue from the provided collection of recipes. 
-    /// Throws an ArgumentException if any recipe is deemed invalid or if there are duplicate recipe IDs.
+    /// Initialises the recipe catalogue from the provided collection of recipes 
+    /// Throws an ArgumentException if any recipe is deemed invalid or if there are duplicate recipe IDs
     /// </summary>
     public RecipeManager(IEnumerable<Recipe> recipes)
     {
@@ -56,6 +57,10 @@ public sealed class RecipeManager : IRecipeManager
     public int PendingInstructionCount => _instructions.Count;
     public int RemovedRecipeCount => _removedRecipes.Count;
 
+    /// <summary>
+    /// Adds a validated recipe to the catalogue
+    /// Returns false if the recipe is invalid or is a duplicate which throws NullException
+    /// </summary>
     public bool AddRecipe(Recipe recipe)
     {
         ArgumentNullException.ThrowIfNull(recipe);
@@ -71,6 +76,10 @@ public sealed class RecipeManager : IRecipeManager
     public Recipe? FindRecipe(int recipeId) =>
         _recipes.GetValueOrDefault(recipeId);
 
+    /// <summary>
+    /// Removes recipe from catalogue by its associated ID
+    /// Returns false if the ID is not found or if its currently in the cooking plan, preventing the plan from holding an invadid recipe ID
+    /// </summary>
     public bool RemoveRecipe(int recipeId)
     {
         if (_cookingPlan.Contains(recipeId))
@@ -81,14 +90,32 @@ public sealed class RecipeManager : IRecipeManager
         return _recipes.Remove(recipeId);
     }
 
-    public int AddIngredientsToShoppingList(int recipeId) =>
-        throw new NotImplementedException("Part A: implement AddIngredientsToShoppingList.");
+    /// <summary>
+    /// Copies the ingredients from the specified recipe into the shopping list
+    /// Returns the number of ingredients added or 0 if the recipe ID is not found
+    /// </summary>
+    public int AddIngredientsToShoppingList(int recipeId)
+    {
+        Recipe? recipe = FindRecipe(recipeId);
 
+        if (recipe is null)
+        {
+            return 0;    
+        }
+
+        _shoppingList.AddRange(recipe.Ingredients);
+        return recipe.Ingredients.Count;
+    }
+
+    /// <summary>
+    /// Returns a copy of the shopping list without exposing the internal list 
+    /// this way any items added or removed from the returned list will not affect the internal shopping list
+    /// </summary>
     public IReadOnlyList<string> GetShoppingList() =>
-        throw new NotImplementedException("Part A: implement GetShoppingList.");
+        new List<string>(_shoppingList);
 
     public void ClearShoppingList() =>
-        throw new NotImplementedException("Part A: implement ClearShoppingList.");
+        _shoppingList.Clear();
 
     public bool AddRecipeToCookingPlan(int recipeId) =>
         throw new NotImplementedException("Part A: implement AddRecipeToCookingPlan.");
