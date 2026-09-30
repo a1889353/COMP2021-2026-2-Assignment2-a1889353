@@ -59,7 +59,8 @@ public sealed class RecipeManager : IRecipeManager
 
     /// <summary>
     /// Adds a validated recipe to the catalogue
-    /// Returns false if the recipe is invalid or is a duplicate which throws NullException
+    /// Returns false if the recipe is invalid or is a duplicate
+    /// Throws an ArgumentNullException if it is null
     /// </summary>
     public bool AddRecipe(Recipe recipe)
     {
@@ -77,8 +78,8 @@ public sealed class RecipeManager : IRecipeManager
         _recipes.GetValueOrDefault(recipeId);
 
     /// <summary>
-    /// Removes recipe from catalogue by its associated ID
-    /// Returns false if the ID is not found or if its currently in the cooking plan, preventing the plan from holding an invadid recipe ID
+    /// Removes a recipe from the catalogue by its associated ID
+    /// Returns false if the ID is not found or if it's currently in the cooking plan, preventing the plan from holding an invalid recipe ID
     /// </summary>
     public bool RemoveRecipe(int recipeId)
     {
@@ -117,11 +118,35 @@ public sealed class RecipeManager : IRecipeManager
     public void ClearShoppingList() =>
         _shoppingList.Clear();
 
-    public bool AddRecipeToCookingPlan(int recipeId) =>
-        throw new NotImplementedException("Part A: implement AddRecipeToCookingPlan.");
+    /// <summary>
+    /// Appends an existing recipe ID to the end of the cooking plan
+    /// returns false if the recipe ID is not found or if it is already in the plan
+    /// </summary>
+    public bool AddRecipeToCookingPlan(int recipeId)
+    {
+        if (FindRecipe(recipeId) is null || _cookingPlan.Contains(recipeId))
+        {
+            return false;
+        }
 
-    public bool RemoveRecipeFromCookingPlan(int recipeId) =>
-        throw new NotImplementedException("Part A: implement RemoveRecipeFromCookingPlan.");
+        _cookingPlan.AddLast(recipeId);
+        return true;
+    }
+
+    /// <summary>
+    /// removes the given recipe ID from the cooking plan - pushing it onto the removed recipes stack
+    /// returns false and leaves the stack unchanged if the ID is not found
+    /// </summary>
+    public bool RemoveRecipeFromCookingPlan(int recipeId)
+    {
+        if (!_cookingPlan.Remove(recipeId))
+        {
+            return false;
+        }
+
+        _removedRecipes.Push(recipeId);
+        return true;
+    }
 
     public bool RestoreLastRemovedRecipe() =>
         throw new NotImplementedException("Part A: implement RestoreLastRemovedRecipe.");
@@ -129,8 +154,11 @@ public sealed class RecipeManager : IRecipeManager
     public int? PeekLastRemovedRecipe() =>
         throw new NotImplementedException("Part A: implement PeekLastRemovedRecipe.");
 
+    /// <summary>
+    /// returns a copy of the cooking plan without exposing the internal linked list
+    /// </summary>
     public IReadOnlyList<int> GetCookingPlan() =>
-        throw new NotImplementedException("Part A: implement GetCookingPlan.");
+        new List<int>(_cookingPlan);
 
     public bool StartCooking(int recipeId) =>
         throw new NotImplementedException("Part A: implement StartCooking.");
