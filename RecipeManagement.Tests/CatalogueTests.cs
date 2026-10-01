@@ -96,4 +96,14 @@ public sealed class CatalogueTests
         Assert.False(manager.RemoveRecipe(100));
         Assert.Equal(1, manager.RecipeCount);
     }
+
+    [Fact]
+    public void RemoveRecipe_RecipeInCookingPlan_ReturnsFalse()
+    {
+        RecipeManager manager = SampleRecipes.ManagerWith(SampleRecipes.Create(4, "Pizza"));
+        manager.AddRecipeToCookingPlan(4);
+
+        Assert.False(manager.RemoveRecipe(4));
+        Assert.Equal(1, manager.RecipeCount);
+    }
 }
