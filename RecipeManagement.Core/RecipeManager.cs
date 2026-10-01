@@ -4,9 +4,8 @@ using System.Collections.Generic;
 namespace RecipeManagement.Core;
 
 /// <summary>
-/// Implement this class using the five Part A collections as private fields:
-/// Dictionary&lt;int, Recipe&gt;, List&lt;string&gt;, LinkedList&lt;int&gt;,
-/// Stack&lt;int&gt; and Queue&lt;string&gt;.
+/// Manages the recipe catalogue and cooking workflow using the five provided Part A collections: 
+/// Dictionary, List, LinkedList, Stack and Queue
 /// </summary>
 public sealed class RecipeManager : IRecipeManager
 {
@@ -18,7 +17,7 @@ public sealed class RecipeManager : IRecipeManager
 
     /// <summary>
     /// Recipe Validation
-    /// checks that the recipe is not null, has a positive ID, and has a non-empty title
+    /// Checks for recipe being null, has a positive ID and a title that is not blank
     /// </summary>
     private static bool IsValidRecipe(Recipe? recipe) =>
         recipe is not null
@@ -26,8 +25,9 @@ public sealed class RecipeManager : IRecipeManager
         && !string.IsNullOrWhiteSpace(recipe.Title);
 
     /// <summary>
-    /// Initialises the recipe catalogue from the provided collection of recipes 
-    /// Throws an ArgumentException if any recipe is deemed invalid or if there are duplicate recipe IDs
+    /// Initialises the recipe catalogue from the provided collection of recipes
+    /// Otherwise throwing an ArgumentNullException for a null collection or
+    /// ArgumentException if any recipe is invalid or if contains duplicate IDs
     /// </summary>
     public RecipeManager(IEnumerable<Recipe> recipes)
     {
@@ -110,7 +110,6 @@ public sealed class RecipeManager : IRecipeManager
 
     /// <summary>
     /// Returns a copy of the shopping list without exposing the internal list 
-    /// this way any items added or removed from the returned list will not affect the internal shopping list
     /// </summary>
     public IReadOnlyList<string> GetShoppingList() =>
         new List<string>(_shoppingList);
