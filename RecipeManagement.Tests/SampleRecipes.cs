@@ -18,6 +18,13 @@ internal static class SampleRecipes
         Instructions = new List<string> { "Mix", "Add", "Cook" }
     };
 
+    public static Recipe WithoutInstructions(int id = 2, string title = "Pasta") => new()
+    {
+        Id = id,
+        Title = title,
+        Ingredients = new List<string> { "200g pasta", "1 cup sauce" }
+    };
+
     public static RecipeManager EmptyManager() => new(Array.Empty<Recipe>());
 
     public static RecipeManager ManagerWith(params Recipe[] recipes) => new(recipes);

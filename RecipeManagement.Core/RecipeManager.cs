@@ -195,17 +195,18 @@ public sealed class RecipeManager : IRecipeManager
     }
 
     /// <summary>
-    /// returns null if the queue is empty, otherwise returns the next instruction without removing it from the queue
+    /// returns null if the queue is empty
+    /// otherwise returns the next instruction without removing it from the queue
     /// </summary>
     public string? PeekNextInstruction() =>
-        _instructions.TryPeek(out string instruction) ? instruction : null;
+        _instructions.TryPeek(out string? instruction) ? instruction : null;
 
     /// <summary>
     /// removes and returns the first instruction from the queue
     /// returns null if the queue is empty
     /// </summary>
     public string? CompleteNextInstruction() =>
-        _instructions.TryDequeue(out string instruction) ? instruction : null;
+        _instructions.TryDequeue(out string? instruction) ? instruction : null;
 
     public IReadOnlyList<Recipe> SearchByTitle(string searchText) =>
         throw new NotImplementedException("Part B: implement SearchByTitle.");
