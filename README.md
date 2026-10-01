@@ -37,4 +37,4 @@ Until you implement `RecipeManager`, menu options print a **Not implemented** me
 
 ## AI acknowledgement
 
-Include the required AI acknowledgement statement in your submission as described in the assignment specification.
+I used Claude to consolidate both the specification and scenario documents into small incremental steps of development so I could implement each working function, run the required unit tests to verify functionality and commit/push prior to starting the next component. I also used it to interpret a particular CS8600 nullable warning which came from how I originally wrote my queue accessors, and to clarify when its appropriate to use an expression bodied member in place of a block body. I did not copy or adapt AI-generated code or other material into my submission. I developed the submitted solution myself based on my understanding of the course material.
