@@ -171,14 +171,41 @@ public sealed class RecipeManager : IRecipeManager
     public IReadOnlyList<int> GetCookingPlan() =>
         new List<int>(_cookingPlan);
 
-    public bool StartCooking(int recipeId) =>
-        throw new NotImplementedException("Part A: implement StartCooking.");
+    /// <summary>
+    /// Clears the current queue and loads the instructions in their original order
+    /// returns false if the recipe is not found or has no instructions without altering the queue
+    /// </summary>
+    public bool StartCooking(int recipeId)
+    {
+        Recipe? recipe = FindRecipe(recipeId);
 
+        if (recipe is null || recipe.Instructions.Count == 0)
+        {
+            return false;
+        }
+
+        _instructions.Clear();
+
+        foreach (string instruction in recipe.Instructions)
+        {
+            _instructions.Enqueue(instruction);
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// returns null if the queue is empty, otherwise returns the next instruction without removing it from the queue
+    /// </summary>
     public string? PeekNextInstruction() =>
-        throw new NotImplementedException("Part A: implement PeekNextInstruction.");
+        _instructions.TryPeek(out string instruction) ? instruction : null;
 
+    /// <summary>
+    /// removes and returns the first instruction from the queue
+    /// returns null if the queue is empty
+    /// </summary>
     public string? CompleteNextInstruction() =>
-        throw new NotImplementedException("Part A: implement CompleteNextInstruction.");
+        _instructions.TryDequeue(out string instruction) ? instruction : null;
 
     public IReadOnlyList<Recipe> SearchByTitle(string searchText) =>
         throw new NotImplementedException("Part B: implement SearchByTitle.");
