@@ -28,4 +28,17 @@ internal static class SampleRecipes
     public static RecipeManager EmptyManager() => new(Array.Empty<Recipe>());
 
     public static RecipeManager ManagerWith(params Recipe[] recipes) => new(recipes);
+
+
+    /// <summary>
+    /// creates recipe with the given ingredient strings
+    /// used for testing several matching lines or empty searches
+    /// </summary>
+    public static Recipe WithIngredients(int id, string title, params string[] ingredients) => new()
+    {
+        Id = id,
+        Title = title,
+        Ingredients = new List<string>(ingredients),
+        Instructions = new List<string> { "Cook" }
+    };
 }

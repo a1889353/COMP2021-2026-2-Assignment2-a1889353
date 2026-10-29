@@ -207,11 +207,42 @@ public sealed class RecipeManager : IRecipeManager
     public string? CompleteNextInstruction() =>
         _instructions.TryDequeue(out string? instruction) ? instruction : null;
 
-    public IReadOnlyList<Recipe> SearchByTitle(string searchText) =>
-        throw new NotImplementedException("Part B: implement SearchByTitle.");
+    /// <summary>
+    /// returns all recipes that contain the search term in their title and ignores case sensitivity
+    /// instead returns all recipes if the search term is null, empty or whitespace
+    /// </summary>
+    public IReadOnlyList<Recipe> SearchByTitle(string searchText)
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            return _recipes.Values.ToList();
+        }
 
-    public IReadOnlyList<Recipe> SearchByIngredient(string searchText) =>
-        throw new NotImplementedException("Part B: implement SearchByIngredient.");
+        string term = searchText.Trim();
+
+        return _recipes.Values
+            .Where(recipe => recipe.Title.Contains(term, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+
+    /// <summary>
+    /// returns all recipes that contain the search term in their ingredients and ignores case sensitivity
+    /// Any() treats several matching ingredients as a single match, so the recipe can only be returned once
+    /// instead returns all recipes if the search term is null, empty or whitespace
+    /// </summary>
+    public IReadOnlyList<Recipe> SearchByIngredient(string searchText)
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            return _recipes.Values.ToList();
+        }
+
+        string term = searchText.Trim();
+
+        return _recipes.Values
+            .Where(recipe => recipe.Ingredients.Any(ingredient => ingredient.Contains(term, StringComparison.OrdinalIgnoreCase)))
+            .ToList();
+    }
 
     public IReadOnlyList<Recipe> GetHighestProteinRecipes(int count) =>
         throw new NotImplementedException("Part B: implement GetHighestProteinRecipes.");
