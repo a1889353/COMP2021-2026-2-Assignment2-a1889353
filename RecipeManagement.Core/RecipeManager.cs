@@ -5,7 +5,7 @@ namespace RecipeManagement.Core;
 
 /// <summary>
 /// Manages the recipe catalogue and cooking workflow using the five provided Part A collections: 
-/// Dictionary, List, LinkedList, Stack and Queue
+/// Dictionary, List, LinkedList, Stack and Queue + a HashSet for saved recipes in Part B
 /// </summary>
 public sealed class RecipeManager : IRecipeManager
 {
@@ -14,6 +14,7 @@ public sealed class RecipeManager : IRecipeManager
     private readonly LinkedList<int> _cookingPlan = new();
     private readonly Stack<int> _removedRecipes = new();
     private readonly Queue<string> _instructions = new();
+    private readonly HashSet<int> _savedRecipes = new();
 
     /// <summary>
     /// Recipe Validation
@@ -265,15 +266,33 @@ public sealed class RecipeManager : IRecipeManager
             .ToList();
     }
 
-    public bool AddSavedRecipe(int recipeId) =>
-        throw new NotImplementedException("Part B: implement AddSavedRecipe.");
+    /// <summary>
+    /// saves an existing recipe ID 
+    /// returns false if the recipe is not in the catalogue or if it is already saved
+    /// </summary>
+    public bool AddSavedRecipe(int recipeId) 
+    {
+        if (!_recipes.ContainsKey(recipeId))
+        {
+            return false;
+        }
 
+        return _savedRecipes.Add(recipeId);
+    }
+
+    /// <summary>
+    /// removes a recipe ID from the saved recipes
+    /// returns false if the ID was not saved
+    /// </summary>
     public bool RemoveSavedRecipe(int recipeId) =>
-        throw new NotImplementedException("Part B: implement RemoveSavedRecipe.");
+        _savedRecipes.Remove(recipeId);
 
     public bool IsRecipeSaved(int recipeId) =>
-        throw new NotImplementedException("Part B: implement IsRecipeSaved.");
+        _savedRecipes.Contains(recipeId);
 
+    /// <summary>
+    /// returns a copy of the saved recipes without exposing the internal HashSet
+    /// </summary>
     public IReadOnlyList<int> GetSavedRecipes() =>
-        throw new NotImplementedException("Part B: implement GetSavedRecipes.");
+        new List<int>(_savedRecipes);
 }
