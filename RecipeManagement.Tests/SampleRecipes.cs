@@ -29,7 +29,6 @@ internal static class SampleRecipes
 
     public static RecipeManager ManagerWith(params Recipe[] recipes) => new(recipes);
 
-
     /// <summary>
     /// creates recipe with the given ingredient strings
     /// used for testing several matching lines or empty searches
@@ -40,5 +39,12 @@ internal static class SampleRecipes
         Title = title,
         Ingredients = new List<string>(ingredients),
         Instructions = new List<string> { "Cook" }
+    };
+
+    public static Recipe WithProtein(int id, string title, double? protein) => new()
+    {
+        Id = id,
+        Title = title,
+        Nutrition = new NutritionInfo { ProteinG = protein }
     };
 }

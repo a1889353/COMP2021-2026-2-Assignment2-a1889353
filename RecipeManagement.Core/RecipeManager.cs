@@ -244,8 +244,26 @@ public sealed class RecipeManager : IRecipeManager
             .ToList();
     }
 
-    public IReadOnlyList<Recipe> GetHighestProteinRecipes(int count) =>
-        throw new NotImplementedException("Part B: implement GetHighestProteinRecipes.");
+    /// <summary>
+    /// returns the recipes with the highest protein content, up to the specified count
+    /// if recipes have identical protein values, they are ordered by ID in ascending order
+    /// recipes with no nutrition information or no protein value are ignored
+    /// returns an empty list if the count is zero or negative
+    /// </summary>
+    public IReadOnlyList<Recipe> GetHighestProteinRecipes(int count)
+    {
+        if (count <= 0)
+        {
+            return new List<Recipe>();
+        }
+
+        return _recipes.Values
+            .Where(recipe => recipe.Nutrition?.ProteinG is not null)
+            .OrderByDescending(recipe => recipe.Nutrition?.ProteinG)
+            .ThenBy(recipe => recipe.Id)
+            .Take(count)
+            .ToList();
+    }
 
     public bool AddSavedRecipe(int recipeId) =>
         throw new NotImplementedException("Part B: implement AddSavedRecipe.");
